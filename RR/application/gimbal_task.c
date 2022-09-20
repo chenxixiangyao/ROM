@@ -723,34 +723,12 @@ static void gimbal_set_control(gimbal_control_t *set_control)
   */
 static void gimbal_absolute_angle_limit(gimbal_motor_t *gimbal_motor, fp32 add)
 {
-    static fp32 bias_angle;
     static fp32 angle_set;
     if (gimbal_motor == NULL)
     {
         return;
     }
-    //now angle error
-    //当前控制误差角度
-    bias_angle = rad_format(gimbal_motor->absolute_angle_set - gimbal_motor->absolute_angle);
-    //relative angle + angle error + add_angle > max_relative angle
-    //云台相对角度+ 误差角度 + 新增角度 如果大于 最大机械角度
-//    if (gimbal_motor->relative_angle + bias_angle + add > gimbal_motor->max_relative_angle)
-//    {
-//        //如果是往最大机械角度控制方向
-        if (add > 0.0f)
-        {
-            //calculate max add_angle
-            //计算出一个最大的添加角度，
-            add = gimbal_motor->max_relative_angle - gimbal_motor->relative_angle - bias_angle;
-        }
-//    }
-//    else if (gimbal_motor->relative_angle + bias_angle + add < gimbal_motor->min_relative_angle)
-//    {
-        if (add < 0.0f)
-        {
-            add = gimbal_motor->min_relative_angle - gimbal_motor->relative_angle - bias_angle;
-        }
-//    }
+
     angle_set = gimbal_motor->absolute_angle_set;
     gimbal_motor->absolute_angle_set = rad_format(angle_set + add);
 }
